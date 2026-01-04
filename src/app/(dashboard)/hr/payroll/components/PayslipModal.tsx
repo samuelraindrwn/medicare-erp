@@ -80,8 +80,8 @@ export function PayslipModal({
           <div>
             <p className="text-gray-500">Bank Account</p>
             <p className="font-bold text-sm">
-              {employee.bankAccount.bankName} -{" "}
-              {employee.bankAccount.accountNumber}
+              {employee.bankAccount?.bankName} -{" "}
+              {employee.bankAccount?.accountNumber}
             </p>
           </div>
         </div>

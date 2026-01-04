@@ -147,10 +147,10 @@ export function MyAttendance() {
               <tr key={log.id} className="hover:bg-gray-50/50">
                 <td className="px-4 py-3 text-gray-900">{log.date}</td>
                 <td className="px-4 py-3 text-gray-600">
-                  {log.clockIn || "-"}
+                  {log.checkIn || "-"}
                 </td>
                 <td className="px-4 py-3 text-gray-600">
-                  {log.clockOut || "-"}
+                  {log.checkOut || "-"}
                 </td>
                 <td className="px-4 py-3">{getStatusBadge(log.status)}</td>
               </tr>

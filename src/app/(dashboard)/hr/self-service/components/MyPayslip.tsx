@@ -18,16 +18,18 @@ export function MyPayslip() {
 
   if (!employee) return <div>Employee not found</div>;
 
-  const payslip = generatePayslip(employee, {
-    taxMethod: "GROSS",
-    bpjsKesehatan: 1,
-    bpjsKetenagakerjaan: {
-      jht: 3.7,
-      jp: 1,
-      jkk: 0.24,
-      jkm: 0.3,
+  const payslip = generatePayslip(
+    employee,
+    "January 2026",
+    {
+      overtimeHours: 0,
+      bonus: 0,
+      deductions: 0,
     },
-  });
+    {
+      taxMethod: "GROSS",
+    }
+  );
 
   const handleDownload = () => {
     addToast("success", "Payslip PDF downloaded successfully.");
@@ -60,7 +62,7 @@ export function MyPayslip() {
               Gross Salary
             </p>
             <p className="text-xl font-bold text-gray-900">
-              Rp {payslip.grossPay.toLocaleString("id-ID")}
+              Rp {payslip.grossSalary.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
@@ -68,7 +70,7 @@ export function MyPayslip() {
               Total Deductions
             </p>
             <p className="text-xl font-bold text-red-600">
-              - Rp {payslip.totalDeductions.toLocaleString("id-ID")}
+              - Rp {payslip.deductions.total.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
@@ -76,7 +78,7 @@ export function MyPayslip() {
               Tax (PPh 21)
             </p>
             <p className="text-xl font-bold text-orange-600">
-              Rp {payslip.pph21.toLocaleString("id-ID")}
+              Rp {payslip.deductions.tax.toLocaleString("id-ID")}
             </p>
           </div>
           <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-4 rounded-lg text-white">
@@ -84,7 +86,7 @@ export function MyPayslip() {
               Take Home Pay
             </p>
             <p className="text-xl font-bold">
-              Rp {payslip.netPay.toLocaleString("id-ID")}
+              Rp {payslip.netSalary.toLocaleString("id-ID")}
             </p>
           </div>
         </div>
@@ -110,7 +112,8 @@ export function MyPayslip() {
                 <tr key={idx} className="hover:bg-gray-50/50">
                   <td className="px-4 py-3 text-gray-900">{period}</td>
                   <td className="px-4 py-3 text-gray-600">
-                    Rp {(payslip.netPay - idx * 100000).toLocaleString("id-ID")}
+                    Rp{" "}
+                    {(payslip.netSalary - idx * 100000).toLocaleString("id-ID")}
                   </td>
                   <td className="px-4 py-3">
                     <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">

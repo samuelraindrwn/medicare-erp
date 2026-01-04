@@ -141,9 +141,9 @@ export interface Employee {
   baseSalary: number;
   taxStatus: "TK/0" | "K/0" | "K/1" | "K/2" | "K/3";
   bankAccount?: {
-    bankName: string;
-    accountNumber: string;
-    holderName: string;
+    bankName?: string;
+    accountNumber?: string;
+    holderName?: string;
   };
   leaveBalance?: {
     annual: number;
