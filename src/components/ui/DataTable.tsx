@@ -83,6 +83,7 @@ interface DataTableProps<T> {
   onRowClicked?: (row: T) => void;
   actions?: React.ReactNode;
   pagination?: boolean;
+  searchPlaceholder?: string;
 }
 
 // Ensure T extends object to satisfy react-data-table-component constraint
@@ -95,6 +96,7 @@ function ModernDataTable<T extends object>({
   onRowClicked,
   actions,
   pagination = true,
+  searchPlaceholder = "Search...",
 }: DataTableProps<T>) {
   const [filterText, setFilterText] = React.useState("");
   const [activeFilters, setActiveFilters] = React.useState<
@@ -150,7 +152,7 @@ function ModernDataTable<T extends object>({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
           <input
             type="text"
-            placeholder="Search..."
+            placeholder={searchPlaceholder}
             className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:bg-white transition-all w-64 shadow-sm"
             value={filterText}
             onChange={(e) => setFilterText(e.target.value)}
@@ -159,7 +161,7 @@ function ModernDataTable<T extends object>({
         {actions}
       </div>
     );
-  }, [filterText, actions]);
+  }, [filterText, actions, searchPlaceholder]);
 
   const displayData = filteredItems;
 

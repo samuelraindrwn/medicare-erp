@@ -6,6 +6,7 @@ import { InputText } from "@/components/ui/InputText";
 import { InputDropdown } from "@/components/ui/InputDropdown";
 import { Modal } from "@/components/ui/Modal";
 import { useToast } from "@/components/ui/Toast";
+import { useConfirm } from "@/components/ui/ConfirmDialog";
 import { Plus, Edit, Trash2 } from "lucide-react";
 import { ModernDataTable } from "@/components/ui/DataTable";
 import { TableColumn } from "react-data-table-component";
@@ -20,6 +21,7 @@ interface User {
 
 export default function UsersPage() {
   const { addToast } = useToast();
+  const { confirm } = useConfirm();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -87,8 +89,16 @@ export default function UsersPage() {
     }, 1000);
   };
 
-  const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this user?")) {
+  const handleDelete = async (id: number) => {
+    const confirmed = await confirm({
+      title: "Delete User",
+      description:
+        "Are you sure you want to delete this user? This action cannot be undone.",
+      confirmText: "Delete",
+      variant: "destructive",
+    });
+
+    if (confirmed) {
       setUsers(users.filter((u) => u.id !== id));
       addToast("success", "User deleted");
     }

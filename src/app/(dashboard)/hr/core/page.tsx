@@ -31,6 +31,8 @@ import { InputDate } from "@/components/ui/InputDate";
 import { InputText } from "@/components/ui/InputText";
 import { ScheduleTab } from "./components/ScheduleTab";
 import { DocumentGeneratorModal } from "./components/DocumentGeneratorModal";
+import { EmployeeEditModal } from "./components/EmployeeEditModal";
+import { Edit } from "lucide-react";
 
 // --- Org Chart Components ---
 interface TreeNode extends Employee {
@@ -114,6 +116,9 @@ export default function CoreHRPage() {
   const [selectedEmployee, setSelectedEmployee] =
     React.useState<Employee | null>(null);
   const [selectedTemplate, setSelectedTemplate] = React.useState<string | null>(
+    null
+  );
+  const [editingEmployee, setEditingEmployee] = React.useState<Employee | null>(
     null
   );
 
@@ -275,17 +280,28 @@ export default function CoreHRPage() {
     {
       name: "Actions",
       cell: (row) => (
-        <Button
-          size="sm"
-          variant="ghost"
-          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-          onClick={() => setSelectedEmployee(row)}
-        >
-          View
-        </Button>
+        <div className="flex gap-1">
+          <Button
+            size="sm"
+            variant="ghost"
+            title="Edit Profile"
+            className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+            onClick={() => setEditingEmployee(row)}
+          >
+            <Edit size={16} />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            onClick={() => setSelectedEmployee(row)}
+          >
+            View
+          </Button>
+        </div>
       ),
       button: true,
-      minWidth: "100px",
+      minWidth: "140px",
     },
   ];
 
@@ -712,6 +728,24 @@ export default function CoreHRPage() {
           </div>
         )}
       </Modal>
+
+      {/* Edit Modal */}
+      {editingEmployee && (
+        <EmployeeEditModal
+          isOpen={!!editingEmployee}
+          onClose={() => setEditingEmployee(null)}
+          employee={editingEmployee}
+          onSave={(updated) => {
+            // In a real app, this would be an API call
+            // For mock, we just close the modal and show success (handled in Modal)
+            // We can optionally update the local data array if we moved it to state,
+            // but for this prototype, the Toast confirms the action.
+            const index = mockEmployees.findIndex((e) => e.id === updated.id);
+            if (index !== -1) mockEmployees[index] = updated; // local mutation for consistency in session
+            setEditingEmployee(null);
+          }}
+        />
+      )}
     </div>
   );
 }
