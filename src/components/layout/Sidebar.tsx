@@ -22,6 +22,26 @@ import {
   Timer,
   Award,
   UserCheck,
+  BookOpen,
+  Receipt,
+  Wallet,
+  BarChart3,
+  PieChart,
+  ReceiptText,
+  Pill,
+  Microscope,
+  Syringe,
+  Monitor,
+  Building,
+  FileQuestion,
+  FileCheck,
+  FileSignature,
+  User,
+  Settings,
+  LogOut,
+  History,
+  FileSearch,
+  ShieldAlert,
 } from "lucide-react";
 
 interface SubMenuItem {
@@ -114,18 +134,115 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         },
       ],
     },
-    { name: "Finance", icon: <DollarSign size={18} />, href: "/finance" },
-    { name: "Inventory", icon: <Package size={18} />, href: "/inventory" },
+    {
+      name: "Finance",
+      icon: <DollarSign size={18} />,
+      subItems: [
+        {
+          name: "General Ledger",
+          href: "/finance/general-ledger",
+          icon: <BookOpen size={16} />,
+        },
+        {
+          name: "AP & AR",
+          href: "/finance/ap-ar",
+          icon: <Receipt size={16} />,
+        },
+        {
+          name: "Cash Management",
+          href: "/finance/cash-management",
+          icon: <Wallet size={16} />,
+        },
+        {
+          name: "Financial Reporting & Tax",
+          href: "/finance/reporting-tax",
+          icon: <BarChart3 size={16} />,
+        },
+        {
+          name: "Assets Depreciation",
+          href: "/finance/assets",
+          icon: <PieChart size={16} />,
+        },
+        {
+          name: "Medical Billings & Invoices",
+          href: "/finance/billing",
+          icon: <ReceiptText size={16} />,
+        },
+      ],
+    },
+    {
+      name: "Inventory",
+      icon: <Package size={18} />,
+      subItems: [
+        {
+          name: "Drugs Management",
+          href: "/inventory/drugs",
+          icon: <Pill size={16} />,
+        },
+        {
+          name: "BHP & Consignment",
+          href: "/inventory/bhp",
+          icon: <Syringe size={16} />,
+        },
+        {
+          name: "Unit-Dose Dispensing",
+          href: "/inventory/udd",
+          icon: <Microscope size={16} />,
+        },
+        {
+          name: "Office Assets",
+          href: "/inventory/office-assets",
+          icon: <Monitor size={16} />,
+        },
+      ],
+    },
     {
       name: "Procurement",
       icon: <ShoppingCart size={18} />,
-      href: "/procurement",
+      subItems: [
+        {
+          name: "Vendor Management",
+          href: "/procurement/vendors",
+          icon: <Building size={16} />,
+        },
+        {
+          name: "Purchase Requisition",
+          href: "/procurement/requisition",
+          icon: <FileQuestion size={16} />,
+        },
+        {
+          name: "Purchase Order",
+          href: "/procurement/po",
+          icon: <FileCheck size={16} />,
+        },
+        {
+          name: "Contract Management",
+          href: "/procurement/contracts",
+          icon: <FileSignature size={16} />,
+        },
+      ],
     },
   ];
 
   const adminItems: MenuItem[] = [
     { name: "Users", icon: <UserCog size={18} />, href: "/users" },
     { name: "Roles", icon: <Shield size={18} />, href: "/roles" },
+    {
+      name: "Audit",
+      icon: <History size={18} />,
+      subItems: [
+        {
+          name: "Activity Logs",
+          href: "/audit/activity",
+          icon: <FileSearch size={16} />,
+        },
+        {
+          name: "Security Logs",
+          href: "/audit/security",
+          icon: <ShieldAlert size={16} />,
+        },
+      ],
+    },
   ];
 
   const isMenuActive = (item: MenuItem) => {
@@ -284,9 +401,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
         </nav>
 
         {/* User Profile */}
-        <div className="p-6 m-4 bg-gray-800 rounded-2xl mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg">
+        <div className="p-4 m-4 bg-gray-800/50 border border-gray-700/50 rounded-2xl mb-8 space-y-4">
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shrink-0">
               AD
             </div>
             <div className="flex-1 min-w-0">
@@ -296,6 +413,32 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
               <p className="text-xs text-gray-400 truncate">
                 Superadmin Access
               </p>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all group">
+              <User
+                size={14}
+                className="text-gray-500 group-hover:text-blue-400 transition-colors"
+              />
+              Profile
+            </button>
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-medium text-gray-300 hover:text-white hover:bg-gray-700/50 rounded-lg transition-all group">
+              <Settings
+                size={14}
+                className="text-gray-500 group-hover:text-blue-400 transition-colors"
+              />
+              Settings
+            </button>
+            <div className="pt-2 mt-2 border-t border-gray-700/50">
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-xs font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all group">
+                <LogOut
+                  size={14}
+                  className="group-hover:translate-x-0.5 transition-transform"
+                />
+                Log out
+              </button>
             </div>
           </div>
         </div>

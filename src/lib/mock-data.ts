@@ -842,6 +842,12 @@ export interface Course {
   progress: number; // 0-100
   thumbnail: string; // color or image url placeholder
   status: "Not Started" | "In Progress" | "Completed";
+  description?: string;
+  modules?: {
+    title: string;
+    duration: string;
+    completed: boolean;
+  }[];
 }
 
 export const mockCandidates: Candidate[] = [
@@ -934,6 +940,22 @@ export const mockCourses: Course[] = [
     progress: 0,
     thumbnail: "bg-red-500",
     status: "Not Started",
+    description:
+      "Essential cybersecurity practices for all employees to protect company data and prevent breaches.",
+    modules: [
+      {
+        title: "Introduction to Cyber Threats",
+        duration: "30m",
+        completed: false,
+      },
+      {
+        title: "Phishing & Social Engineering",
+        duration: "45m",
+        completed: false,
+      },
+      { title: "Password Security", duration: "30m", completed: false },
+      { title: "Secure Remote Working", duration: "45m", completed: false },
+    ],
   },
   {
     id: "LMS2",
@@ -943,6 +965,18 @@ export const mockCourses: Course[] = [
     progress: 45,
     thumbnail: "bg-blue-500",
     status: "In Progress",
+    description:
+      "Deep dive into advanced React concepts including HOCs, Render Props, Custom Hooks, and Performance Optimization.",
+    modules: [
+      { title: "Higher Order Components", duration: "1h", completed: true },
+      {
+        title: "Render Props & Composition",
+        duration: "1h 30m",
+        completed: true,
+      },
+      { title: "Advanced Hooks", duration: "2h", completed: false },
+      { title: "Performance Tuning", duration: "1h 30m", completed: false },
+    ],
   },
   {
     id: "LMS3",
@@ -952,6 +986,14 @@ export const mockCourses: Course[] = [
     progress: 100,
     thumbnail: "bg-green-500",
     status: "Completed",
+    description:
+      "Learn the core principles of effective leadership, team management, and emotional intelligence.",
+    modules: [
+      { title: "Leadership Styles", duration: "1h", completed: true },
+      { title: "Emotional Intelligence", duration: "1h", completed: true },
+      { title: "Conflict Resolution", duration: "1h", completed: true },
+      { title: "Motivating Teams", duration: "1h", completed: true },
+    ],
   },
 ];
 

@@ -6,15 +6,30 @@ import { PlayCircle, CheckCircle, Clock, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 
+import { LearningModal } from "./LearningModal";
+
 export function MyLearning() {
   const { addToast } = useToast();
   const [courses, setCourses] = React.useState<Course[]>(mockCourses);
+  const [selectedCourse, setSelectedCourse] = React.useState<Course | null>(
+    null
+  );
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  const handleContinue = (id: string) => {
+  const handleUpdateProgress = (id: string, newProgress: number) => {
     setCourses((prev) =>
       prev.map((c) => {
         if (c.id !== id) return c;
-        const newProgress = Math.min(c.progress + 20, 100);
+        // Update modules completion status locally for the modal view if needed,
+        // but here we just update the main list
+        const updatedModules = c.modules?.map((m, idx) => {
+          // Logic to mark modules as complete based on progress is tricky without explicit ID,
+          // so we'll just trust the progress for the bar, and maybe update specific module if we had the index.
+          // For simplicity in this mock, let's just make sure status reflects progress.
+          return m;
+        });
+
+        // Actually, let's update specific module completion in the modal handler instead
         return {
           ...c,
           progress: newProgress,
@@ -22,7 +37,73 @@ export function MyLearning() {
         };
       })
     );
-    addToast("success", "Progress updated!");
+
+    // Also update the selected course state so the modal updates immediately
+    if (selectedCourse && selectedCourse.id === id) {
+      setSelectedCourse((prev) =>
+        prev
+          ? {
+              ...prev,
+              progress: newProgress,
+              status: newProgress >= 100 ? "Completed" : "In Progress",
+            }
+          : null
+      );
+    }
+  };
+
+  // Custom handler to sync module completion from modal
+  const onModalProgressUpdate = (courseId: string, newProgress: number) => {
+    setCourses((prev) =>
+      prev.map((c) => {
+        if (c.id !== courseId) return c;
+
+        // We need to mark the next available module as complete in our mock state
+        // simplistic approach:
+        const modules = c.modules ? [...c.modules] : [];
+        const firstIncompleteIdx = modules.findIndex((m) => !m.completed);
+        if (firstIncompleteIdx !== -1) {
+          modules[firstIncompleteIdx] = {
+            ...modules[firstIncompleteIdx],
+            completed: true,
+          };
+        }
+
+        return {
+          ...c,
+          progress: newProgress,
+          status: newProgress >= 100 ? "Completed" : "In Progress",
+          modules,
+        };
+      })
+    );
+
+    // Re-read from updated state logic is complex in React batching,
+    // so we manually update selectedCourse to match what we just did
+    setSelectedCourse((prev) => {
+      if (!prev || prev.id !== courseId) return prev;
+      const modules = prev.modules ? [...prev.modules] : [];
+      const firstIncompleteIdx = modules.findIndex((m) => !m.completed);
+      if (firstIncompleteIdx !== -1) {
+        modules[firstIncompleteIdx] = {
+          ...modules[firstIncompleteIdx],
+          completed: true,
+        };
+      }
+      return {
+        ...prev,
+        progress: newProgress,
+        status: newProgress >= 100 ? "Completed" : "In Progress",
+        modules,
+      };
+    });
+
+    addToast("success", "Progress saved!");
+  };
+
+  const openCourse = (course: Course) => {
+    setSelectedCourse(course);
+    setIsModalOpen(true);
   };
 
   const getProgressColor = (progress: number) => {
@@ -109,11 +190,10 @@ export function MyLearning() {
               <Button
                 className="w-full"
                 variant={course.status === "Completed" ? "outline" : "default"}
-                disabled={course.status === "Completed"}
-                onClick={() => handleContinue(course.id)}
+                onClick={() => openCourse(course)}
               >
                 {course.status === "Completed" ? (
-                  "Completed"
+                  "Review Course"
                 ) : course.status === "In Progress" ? (
                   <>
                     <PlayCircle size={16} className="mr-2" /> Continue
@@ -128,6 +208,13 @@ export function MyLearning() {
           </div>
         ))}
       </div>
+
+      <LearningModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        course={selectedCourse}
+        onUpdateProgress={onModalProgressUpdate}
+      />
     </div>
   );
 }

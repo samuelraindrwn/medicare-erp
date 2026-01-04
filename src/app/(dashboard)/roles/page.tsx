@@ -1,148 +1,137 @@
 "use client";
 
 import * as React from "react";
-import { Button } from "@/components/ui/Button";
-import { Shield, Plus, Edit } from "lucide-react";
-import { InputText } from "@/components/ui/InputText";
-import { Modal } from "@/components/ui/Modal";
-import { useToast } from "@/components/ui/Toast";
+import { Shield, Lock, Users, Edit3 } from "lucide-react";
 import { ModernDataTable } from "@/components/ui/DataTable";
-import { TableColumn } from "react-data-table-component";
+import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 interface Role {
-  id: number;
+  id: string;
   name: string;
   description: string;
   usersCount: number;
+  permissions: number; // Count of permissions
+  type: "System" | "Custom";
 }
 
+const MOCK_ROLES: Role[] = [
+  {
+    id: "ROLE-001",
+    name: "Super Admin",
+    description: "Full access to all modules and system settings.",
+    usersCount: 2,
+    permissions: 145,
+    type: "System",
+  },
+  {
+    id: "ROLE-002",
+    name: "Doctor",
+    description: "Access to patient records, appointments, and prescriptions.",
+    usersCount: 45,
+    permissions: 24,
+    type: "System",
+  },
+  {
+    id: "ROLE-003",
+    name: "Nurse",
+    description: "Access to patient vitals, ward management, and UDD.",
+    usersCount: 120,
+    permissions: 18,
+    type: "System",
+  },
+  {
+    id: "ROLE-004",
+    name: "Pharmacist",
+    description: "Access to inventory, dispensing, and procurement.",
+    usersCount: 8,
+    permissions: 32,
+    type: "System",
+  },
+  {
+    id: "ROLE-005",
+    name: "HR Manager",
+    description: "Access to payroll, employee records, and recruitment.",
+    usersCount: 3,
+    permissions: 40,
+    type: "Custom",
+  },
+  {
+    id: "ROLE-006",
+    name: "Finance Officer",
+    description: "Access to billing, general ledger, and reporting.",
+    usersCount: 5,
+    permissions: 35,
+    type: "Custom",
+  },
+];
+
 export default function RolesPage() {
-  const { addToast } = useToast();
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  const [roles, setRoles] = React.useState<Role[]>([
-    {
-      id: 1,
-      name: "Superadmin",
-      description: "Full access to all modules and configurations.",
-      usersCount: 2,
-    },
-    {
-      id: 2,
-      name: "Admin",
-      description: "Access to user management and operational modules.",
-      usersCount: 5,
-    },
-    {
-      id: 3,
-      name: "Doctor",
-      description: "Access to patient records and scheduling.",
-      usersCount: 15,
-    },
-    {
-      id: 4,
-      name: "Nurse",
-      description: "Access to patient vitals and care plans.",
-      usersCount: 30,
-    },
-    {
-      id: 5,
-      name: "HR",
-      description:
-        "Access to human resources, payroll, and employee management.",
-      usersCount: 4,
-    },
-    {
-      id: 6,
-      name: "Finance",
-      description: "Access to billing, invoicing, and financial reports.",
-      usersCount: 6,
-    },
-    {
-      id: 7,
-      name: "Warehouse",
-      description: "Access to inventory, stock management, and procurement.",
-      usersCount: 8,
-    },
-    {
-      id: 8,
-      name: "Patient",
-      description:
-        "Limited access to personal health records and appointments.",
-      usersCount: 120,
-    },
-  ]);
-
-  const [newRoleName, setNewRoleName] = React.useState("");
-  const [newRoleDesc, setNewRoleDesc] = React.useState("");
-
-  const handleCreateRole = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setRoles([
-        ...roles,
-        {
-          id: roles.length + 1,
-          name: newRoleName,
-          description: newRoleDesc,
-          usersCount: 0,
-        },
-      ]);
-      setIsLoading(false);
-      setIsModalOpen(false);
-      setNewRoleName("");
-      setNewRoleDesc("");
-      addToast("success", "Role created successfully");
-    }, 800);
-  };
-
-  const columns: TableColumn<Role>[] = [
+  const columns: any[] = [
     {
       name: "Role Name",
-      selector: (row) => row.name,
+      selector: (row: Role) => row.name,
       sortable: true,
-      cell: (row) => (
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
-            <Shield size={18} />
-          </div>
-          <span className="font-semibold text-gray-900">{row.name}</span>
+      cell: (row: Role) => (
+        <div>
+          <div className="font-semibold text-gray-900">{row.name}</div>
         </div>
       ),
     },
     {
       name: "Description",
-      selector: (row) => row.description,
-      sortable: true,
-      grow: 2,
+      selector: (row: Role) => row.description,
+      cell: (row: Role) => (
+        <span className="text-gray-600 text-sm truncate max-w-xs">
+          {row.description}
+        </span>
+      ),
     },
     {
       name: "Users",
-      selector: (row) => row.usersCount,
+      selector: (row: Role) => row.usersCount,
       sortable: true,
-      right: true,
-      cell: (row) => (
-        <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-          {row.usersCount} users
+      cell: (row: Role) => (
+        <div className="flex items-center gap-2">
+          <Users size={14} className="text-gray-400" />
+          <span className="text-gray-700 font-medium">{row.usersCount}</span>
+        </div>
+      ),
+    },
+    {
+      name: "Permissions",
+      selector: (row: Role) => row.permissions,
+      sortable: true,
+      cell: (row: Role) => (
+        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+          {row.permissions} Access Points
+        </span>
+      ),
+    },
+    {
+      name: "Type",
+      selector: (row: Role) => row.type,
+      sortable: true,
+      cell: (row: Role) => (
+        <span
+          className={cn(
+            "px-2 py-0.5 rounded text-xs font-semibold border",
+            row.type === "System"
+              ? "bg-blue-50 text-blue-700 border-blue-200"
+              : "bg-purple-50 text-purple-700 border-purple-200"
+          )}
+        >
+          {row.type}
         </span>
       ),
     },
     {
       name: "Actions",
-      cell: (row) => (
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-        >
-          <Edit size={16} className="mr-1" /> Edit Permissions
-        </Button>
+      cell: (row: Role) => (
+        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center gap-1">
+          <Edit3 size={14} /> Edit
+        </button>
       ),
-      right: true,
-      width: "180px",
     },
   ];
 
@@ -150,67 +139,23 @@ export default function RolesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Roles & Permissions
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-600/10 text-blue-600 rounded-lg">
+              <Shield size={24} />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Roles & Permissions
+            </h1>
+          </div>
           <p className="text-sm text-gray-500">
-            Manage user roles and their access levels.
+            Define roles and configure access permissions for different user
+            groups.
           </p>
         </div>
+        <Button>Create Role</Button>
       </div>
 
-      <ModernDataTable
-        columns={columns}
-        data={roles}
-        searchable
-        searchField="name"
-        actions={
-          <Button onClick={() => setIsModalOpen(true)}>
-            <Plus className="mr-2 h-4 w-4" />
-            Create New Role
-          </Button>
-        }
-      />
-
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Create Custom Role"
-        description="Define a new role for the system."
-      >
-        <form
-          id="create-role-form"
-          onSubmit={handleCreateRole}
-          className="space-y-4"
-        >
-          <InputText
-            label="Role Name"
-            placeholder="e.g. Pharmacist"
-            value={newRoleName}
-            onChange={(e) => setNewRoleName(e.target.value)}
-            required
-          />
-          <InputText
-            label="Description"
-            placeholder="Briefly describe the responsibilities..."
-            value={newRoleDesc}
-            onChange={(e) => setNewRoleDesc(e.target.value)}
-            required
-          />
-        </form>
-        <div className="mt-6 flex justify-end gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setIsModalOpen(false)}
-            type="button"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" form="create-role-form" isLoading={isLoading}>
-            Create Role
-          </Button>
-        </div>
-      </Modal>
+      <ModernDataTable columns={columns} data={MOCK_ROLES} searchable={false} />
     </div>
   );
 }

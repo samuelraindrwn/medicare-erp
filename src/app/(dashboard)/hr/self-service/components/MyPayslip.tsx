@@ -9,7 +9,7 @@ import { FileText, Download } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
 // Mock logged-in employee
-const CURRENT_EMPLOYEE_ID = "EMP005";
+const CURRENT_EMPLOYEE_ID = "emp-5";
 
 export function MyPayslip() {
   const { addToast } = useToast();

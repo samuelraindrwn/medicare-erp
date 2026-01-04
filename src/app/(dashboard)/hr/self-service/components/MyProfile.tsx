@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 // Mock logged-in employee
-const CURRENT_EMPLOYEE_ID = "EMP005";
+const CURRENT_EMPLOYEE_ID = "emp-5";
 
 export function MyProfile() {
   const { addToast } = useToast();

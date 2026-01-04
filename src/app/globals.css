@@ -157,3 +157,25 @@ body {
 .fc-theme-standard th {
   border-color: #e5e7eb;
 }
+
+@media print {
+  /* Hide sidebar and header */
+  aside,
+  header,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Reset margins for main content */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Ensure background colors print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

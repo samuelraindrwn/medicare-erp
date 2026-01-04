@@ -31,6 +31,8 @@ export function InputDropdown({
   required,
   ...props
 }: InputDropdownProps) {
+  const instanceId = React.useId();
+
   return (
     <div className="w-full space-y-2">
       {label && (
@@ -40,6 +42,7 @@ export function InputDropdown({
         </label>
       )}
       <Select
+        instanceId={instanceId}
         options={options}
         value={value}
         onChange={(val) => onChange(val as Option | null)}
